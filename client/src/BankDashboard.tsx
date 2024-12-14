@@ -52,8 +52,8 @@ import {
 
 const bankSchema = z.object({
   bankName: z.string()
-    .min(20, "Bank name must be between 20 to 255 characters.")
-    .max(255, "Bank name must be between 20 to 255 characters."),
+    .min(1, "Bank name must be between 1 and 255 characters.")
+    .max(255, "Bank name must be between 1 and 255 characters."),
   bankYear: z.coerce.date()
     .refine(date => date < new Date(), "Provided bank year must be in the past."),
   bankEmployees: z.coerce.number()

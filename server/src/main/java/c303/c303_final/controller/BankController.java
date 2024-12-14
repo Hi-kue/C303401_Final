@@ -103,7 +103,7 @@ public class BankController {
         return ApiResponseHandler.success(updatedBank);
     }
 
-    @PostMapping("find/update/name/{bankName}")
+    @PostMapping("find/update/name")
     public ResponseEntity<ApiResponse<Boolean>> updateBankByBankName(
             @RequestParam(name = "bankName", required = false, defaultValue = "false") String bankName,
             @RequestBody Bank bank
