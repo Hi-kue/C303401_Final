@@ -8,7 +8,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -50,11 +49,9 @@ public class Bank {
 
 
     @NotNull(message = "Bank employees is a required field, and cannot be null.")
-    @Size(min = 1, message = "Bank employees must contain at lest one employee.")
-    @ElementCollection
-    @CollectionTable(name = "bank_employees", joinColumns = @JoinColumn(name = "bank_id"))
+    @Min(value = 1, message = "Bank employees must contain at lest one employee.")
     @Column(name = "bank_employees", nullable = false)
-    private List<Employee> bankEmployees;
+    private Integer bankEmployees;
 
 
     //region Timestamps

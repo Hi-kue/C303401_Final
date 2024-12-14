@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("api/v1/bank/")
 @RestController
 public class BankController {
-    private BankService bankService;
+    private final BankService bankService;
 
     @Autowired
     public BankController(BankService bankService) {
@@ -27,16 +27,24 @@ public class BankController {
         var banks = bankService.findAllBanks();
 
         if (banks.isEmpty()) {
-            return ApiResponseHandler
-                    .error("No Bank entities currently exist, please create Banks entity.",
-                            HttpStatus.NOT_FOUND);
+            return ApiResponseHandler.collection(
+                    "There are currently no bank entities in the database. Please create one.",
+                    HttpStatus.OK,
+                    banks);
         }
 
-        return ApiResponseHandler.success(banks);
+        return ApiResponseHandler.collection(
+                "There are currently %s bank entities in the database.",
+                HttpStatus.OK,
+                banks,
+                banks.size()
+        );
     }
 
-    @GetMapping("find/id/{bankId}")
-    public ResponseEntity<ApiResponse<Bank>> findBankByBankId(@PathVariable("bankId") Long bankId) {
+    @GetMapping("find/id")
+    public ResponseEntity<ApiResponse<Bank>> findBankByBankId(
+            @RequestParam(name = "bankId", required = false, defaultValue = "false") Long bankId
+    ) {
         var bank = bankService.findBankById(bankId);
 
         if (bank == null) {
@@ -48,8 +56,9 @@ public class BankController {
         return ApiResponseHandler.success(bank);
     }
 
-    @GetMapping("find/name/{bankName}")
-    public ResponseEntity<ApiResponse<Bank>> findBankByBankName(@PathVariable("bankName") String bankName) {
+    @GetMapping("find/name")
+    public ResponseEntity<ApiResponse<Bank>> findBankByBankName(
+            @RequestParam(name = "bankName", required = false, defaultValue = "false")  String bankName) {
         var bank = bankService.findBankByBankName(bankName);
 
         if (bank == null) {
@@ -78,8 +87,11 @@ public class BankController {
     // endregion
 
     // region PUT MAPPINGS
-    @PutMapping("find/update/id/{bankId}")
-    public ResponseEntity<ApiResponse<Boolean>> updateBankByBankId(@PathVariable("bankId") Long bankId, @RequestBody Bank bank) {
+    @PutMapping("find/update/id")
+    public ResponseEntity<ApiResponse<Boolean>> updateBankByBankId(
+            @RequestParam(name = "bankId", required = false, defaultValue = "false") Long bankId,
+            @RequestBody Bank bank
+    ) {
         var updatedBank = bankService.updateBankByBankId(bank, bankId);
 
         if (!updatedBank) {
@@ -92,7 +104,10 @@ public class BankController {
     }
 
     @PostMapping("find/update/name/{bankName}")
-    public ResponseEntity<ApiResponse<Boolean>> updateBankByBankName(@PathVariable("bankName") String bankName, @RequestBody Bank bank) {
+    public ResponseEntity<ApiResponse<Boolean>> updateBankByBankName(
+            @RequestParam(name = "bankName", required = false, defaultValue = "false") String bankName,
+            @RequestBody Bank bank
+    ) {
         var updatedBank = bankService.updateBankByBankName(bank, bankName);
 
         if (!updatedBank) {
@@ -106,8 +121,11 @@ public class BankController {
     // endregion
 
     // region PATCH MAPPINGS
-    @PatchMapping("find/patch/id/{bankId}")
-    public ResponseEntity<ApiResponse<Boolean>> patchBankByBankId(@PathVariable("bankId") Long bankId, @RequestBody Bank bank) {
+    @PatchMapping("find/patch/id")
+    public ResponseEntity<ApiResponse<Boolean>> patchBankByBankId(
+            @RequestParam(name = "bankId", required = false, defaultValue = "false") Long bankId,
+            @RequestBody Bank bank
+    ) {
         var patchedBank = bankService.patchBankByBankId(bank, bankId);
 
         if (!patchedBank) {
@@ -119,8 +137,11 @@ public class BankController {
         return ApiResponseHandler.success(patchedBank);
     }
 
-    @PatchMapping("find/patch/name/{bankName}")
-    public ResponseEntity<ApiResponse<Boolean>> patchBankByBankName(@PathVariable("bankName") String bankName, @RequestBody Bank bank) {
+    @PatchMapping("find/patch/name")
+    public ResponseEntity<ApiResponse<Boolean>> patchBankByBankName(
+            @RequestParam(name = "bankName", required = false, defaultValue = "false") String bankName,
+            @RequestBody Bank bank
+    ) {
         var patchedBank = bankService.patchBankByBankName(bank, bankName);
 
         if (!patchedBank) {
@@ -134,8 +155,10 @@ public class BankController {
     // endregion
 
     // region DELETE MAPPINGS
-    @DeleteMapping("find/delete/id/{bankId}")
-    public ResponseEntity<ApiResponse<Boolean>> deleteBankByBankId(@PathVariable("bankId") Long bankId) {
+    @DeleteMapping("find/delete/id")
+    public ResponseEntity<ApiResponse<Boolean>> deleteBankByBankId(
+            @RequestParam(name = "bankId", required = false, defaultValue = "false") Long bankId
+    ) {
         var deleted = bankService.deleteBankByBankId(bankId);
 
         if (!deleted) {
@@ -147,8 +170,10 @@ public class BankController {
         return ApiResponseHandler.success(deleted);
     }
 
-    @DeleteMapping("find/delete/name/{bankName}")
-    public ResponseEntity<ApiResponse<Boolean>> deleteBankByBankName(@PathVariable("bankName") String bankName) {
+    @DeleteMapping("find/delete/name")
+    public ResponseEntity<ApiResponse<Boolean>> deleteBankByBankName(
+            @RequestParam(name = "bankName", required = false, defaultValue = "false") String bankName
+    ) {
         var deleted = bankService.deleteBankByBankName(bankName);
 
         if (!deleted) {

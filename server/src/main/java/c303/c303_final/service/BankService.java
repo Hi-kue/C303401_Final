@@ -28,19 +28,30 @@ public class BankService {
     }
 
     public Bank findBankById(final Long id) {
-        return findBankByTypeOrThrowException(id);
+        return findBankByIdOrThrowException(id);
     }
 
     public Bank findBankByBankName(final String bankName) {
-        return findBankByTypeOrThrowException(bankName);
+        return findBankByBankNameOrThrowException(bankName);
     }
 
     public Bank createBank(final Bank bank) {
-        return bankRepository.save(bank);
+        var bankEntity = Bank.builder()
+                .bankName(bank.getBankName())
+                .bankYear(bank.getBankYear())
+                .bankAddress(bank.getBankAddress())
+                .bankAtms(bank.getBankAtms())
+                .bankBranches(bank.getBankBranches())
+                .bankEmployees(bank.getBankEmployees())
+                .CreatedAt(Instant.now())
+                .ModifiedAt(Instant.now())
+                .build();
+
+        return bankRepository.save(bankEntity);
     }
 
     public Boolean updateBankByBankId(final Bank bank, final Long id) {
-        var bankToUpdate = findBankById(id);
+        var bankToUpdate = findBankByIdOrThrowException(id);
 
         updateBankAttributes(bankToUpdate, bank);
         bankRepository.save(bankToUpdate);
@@ -48,7 +59,7 @@ public class BankService {
     }
 
     public Boolean updateBankByBankName(final Bank bank, final String bankName) {
-        var bankToUpdate = findBankByBankName(bankName);
+        var bankToUpdate = findBankByBankNameOrThrowException(bankName);
 
         updateBankAttributes(bankToUpdate, bank);
         bankRepository.save(bankToUpdate);
@@ -56,21 +67,21 @@ public class BankService {
     }
 
     public Boolean deleteBankByBankId(final Long id) {
-        var bankToDelete = findBankById(id);
+        var bankToDelete = findBankByIdOrThrowException(id);
 
         bankRepository.delete(bankToDelete);
         return true;
     }
 
     public Boolean deleteBankByBankName(final String bankName) {
-        var bankToDelete = findBankByBankName(bankName);
+        var bankToDelete = findBankByBankNameOrThrowException(bankName);
 
         bankRepository.delete(bankToDelete);
         return true;
     }
 
     public Boolean patchBankByBankId(final Bank bank, final Long id) {
-        var bankToUpdate = findBankById(id);
+        var bankToUpdate = findBankByIdOrThrowException(id);
 
         updateBankAttributes(bankToUpdate, bank);
         bankRepository.save(bankToUpdate);
@@ -78,7 +89,7 @@ public class BankService {
     }
 
     public Boolean patchBankByBankName(final Bank bank, final String bankName) {
-        var bankToUpdate = findBankByBankName(bankName);
+        var bankToUpdate = findBankByBankNameOrThrowException(bankName);
 
         updateBankAttributes(bankToUpdate, bank);
         bankRepository.save(bankToUpdate);
@@ -86,6 +97,25 @@ public class BankService {
     }
 
     // region Helpers
+    private Bank findBankByIdOrThrowException(final Long id) {
+        var bankEntity = bankRepository.findBankByBankId(id);
+
+        if (bankEntity == null) {
+            throw new EntityNotFoundException(String.format(BANK_WITH_ID_NOT_FOUND, id));
+        }
+        return bankEntity;
+    }
+
+    private Bank findBankByBankNameOrThrowException(final String bankName) {
+        var bankEntity = bankRepository.findBanksByBankName(bankName);
+
+        if (bankEntity == null) {
+            throw new EntityNotFoundException(String.format(BANK_WITH_NAME_NOT_FOUND, bankName));
+        }
+        return bankEntity.get(0);
+    }
+
+    @Deprecated(forRemoval = true)
     private <T> Bank findBankByTypeOrThrowException(final T type) {
         if (type == null) {
             throw new IllegalArgumentException("'T' type provided cannot be null or empty.");
@@ -95,7 +125,7 @@ public class BankService {
             var bankEntity = bankRepository.findBankByBankId((Long) type);
 
             if (bankEntity == null) {
-                throw new EntityNotFoundException(String.format(BANK_WITH_ID_NOT_FOUND, (Long) type));
+                throw new EntityNotFoundException(String.format(BANK_WITH_ID_NOT_FOUND, type));
             }
             return bankEntity;
 
@@ -103,7 +133,7 @@ public class BankService {
             var bankEntity = bankRepository.findBanksByBankName((String) type);
 
             if (bankEntity == null) {
-                throw new EntityNotFoundException(String.format(BANK_WITH_NAME_NOT_FOUND, (String) type));
+                throw new EntityNotFoundException(String.format(BANK_WITH_NAME_NOT_FOUND, type));
             }
             return bankEntity.get(0);
 

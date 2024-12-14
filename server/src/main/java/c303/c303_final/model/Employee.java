@@ -10,7 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.Instant;
 
-
+@Deprecated(forRemoval = true)
 @Embeddable
 public class Employee {
     @NotNull(message = "Employee id is a required field, and cannot be null.")
