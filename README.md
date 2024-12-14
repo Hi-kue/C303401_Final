@@ -8,7 +8,6 @@
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
-  - [Usage](#usage)
   - [License](#license)
 
 ## Introduction
@@ -26,51 +25,53 @@ for this project include:
 
 ### Prerequisites
 
-Before you begin, ensure you have the following installed:
+Inorder to properly run this project, you must have the following software/tools installed
+on your machine:
 
 - [Node.js](https://nodejs.org/en/download/)
 - [Git](https://git-scm.com/downloads)
 - [Visual Studio Code](https://code.visualstudio.com/)
+- [MySQL](https://www.mysql.com/downloads/)
+- [Apache Maven](https://maven.apache.org/download.cgi)
+- [JDK](https://www.oracle.com/java/technologies/downloads/)
+- [npm](https://www.npmjs.com/get-npm)
+- [pnpm](https://pnpm.io/installation)
+
+> [!NOTE]
+> It is recommended to have the latest versions of each of the above software/tools installed, although
+> older versions may also work but might cause some issues and bugs that will need to be addressed
+> by you as the developer.
 
 ### Installation
 
 1. Clone the repository:
 
 ```bash
-git clone 
+git clone https://github.com/Hi-kue/C303401_Final.git .
 ```
-
-2. Navigate to the project directory:
+2. Navigate to the server directory that contains the Spring Boot application;
 
 ```bash
-cd bank-management-app
+cd ./server/
 ```
-
-3. Install the dependencies:
+3. Setup the project dependencies and run the backend application using the following command:
 
 ```bash
-npm install
-```
+mvn spring-boot:run
 
-4. Start the development server:
+```
+4. Head over to the `client` directory and install the project dependencies using the following command:
 
 ```bash
-npm run dev
+cd ../client/
+npm install | pnpm install
 ```
+5. Start the frontend development server using the following command:
 
-5. Open your browser and navigate to `http://localhost:3000`.
-
-## Usage
-
-The application is built using the following technologies:
-
-- TypeScript
-- React
-- Tailwind CSS
-- Zod
-- Axios
-- Node.js
-- Express.js
+```bash
+npm run dev | pnpm run dev
+```
+5. Open your browser and navigate to `http://localhost:5173` to view the frontend application.
 
 ## License
 
